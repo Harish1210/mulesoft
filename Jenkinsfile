@@ -22,7 +22,7 @@ pipeline {
 
                         withMaven(maven: 'Maven') {
 
-                            sh "mvn clean compile"
+                            bat "mvn clean compile"
 
                        
                             }
@@ -41,7 +41,7 @@ pipeline {
 
                     withMaven(maven: 'Maven'){
 
-                        sh "mvn deploy"
+                        bat "mvn deploy"
 
                     
                 }

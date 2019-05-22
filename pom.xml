@@ -31,7 +31,7 @@
             <username>Harish12101</username>
             <password>Harish@1210</password>
             <applicationName>devops-poc</applicationName>
-            <environment>SANDBOX</environment>
+            <environment>Sandbox</environment>
             <properties>
                 <key>value</key>
             </properties>

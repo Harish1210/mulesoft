@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	
+	<configuration doc:name="Configuration" doc:id="42c56bf1-64e5-41d9-b90f-34b090a5abd6" defaultErrorHandler-ref="globalerrorehandlerError_Handler" />
+	<file:config name="File_Config" doc:name="File Config" doc:id="87edaf7f-d8ea-415c-9767-269e0952568c" >
+		<file:connection workingDir="E:\Harish\ForEach" />
+	</file:config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="9113b2f4-7ff7-4920-9546-2fef15de76b1" basePath="/api/" >
+		<http:listener-connection host="localhost" port="8099" />
+	</http:listener-config>
+	<flow name="batchProcFlow" doc:id="c64a7956-5b81-4be7-827e-6b60caf2ba00" >
+		<http:listener doc:name="Listener" doc:id="bd229f81-d94d-4441-9703-1828b35d0a3b" path="POC" allowedMethods="GET" config-ref="HTTP_Listener_config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c60b1c5a-bf30-4b2f-a0f4-2e8db0418ee2" message="--In For each flow---"/>
+		<set-payload value='#[{"account":{
+"accountID":"4829ADJ-4833",
+"name":"Mary Loo",
+"balance":48233.43
+},
+"account":{
+"accountID":"4829AJJ-4833",
+"name":"Harish",
+"balance":4331.43
+},
+"account":{
+"accountID":"4829AGJ-4833",
+"name":"Girish",
+"balance":46666.43
+}}
+]' doc:name="Set Payload" doc:id="c16e5e0d-26ce-42fc-af85-75fb3eb78502" />
+		<logger level="INFO" doc:name="Logger" doc:id="e6d427e8-698e-4af3-aaca-0a1e07c17202" message="#[payload.account]-----&gt;"/>
+		<foreach doc:name="For Each" doc:id="6f494a0a-86fb-4c2e-9dcc-3fb2cfc48d78" collection="#[payload.account]">
+			<file:write doc:name="Write" doc:id="27cb5fa1-d673-4ad6-a05d-3c9c879eba1f" config-ref="File_Config" path='#["data/account-" ++ random()]'/>
+		</foreach>
+		<set-payload value="Sucess End Flow" doc:name="Set Payload" doc:id="cd2c58a4-194f-49cb-b9bf-39625d89ad02" />
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bad81db4-d5d2-4bed-ae0f-6493fc470883" >
+				<logger level="INFO" doc:name="Logger" doc:id="c2b72f98-09ea-4286-b50d-6a395f24abb0" message="--In Main error continue--"/>
+				<set-payload value="--Main flow--" doc:name="Set Payload" doc:id="78701f3e-c130-46ce-9683-2aa8762d37e3" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

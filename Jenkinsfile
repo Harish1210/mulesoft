@@ -10,15 +10,6 @@ pipeline {
 
     stages {
 
-        stage('Notify_Build_Starts'){
-
-            steps{
-
-                slackSend color: '#439FE0', message: "*Started Build Number:1234"
-
-            }
-
-        }
 
       	stage('Sonar_Test'){
           
@@ -91,20 +82,6 @@ pipeline {
 
     }
 
-    post {
-
-        success {
-
-            slackSend color: '#34ea31', message: "*Completed Build Number:*1234"
-
-        }
-
-        failure {
-
-            slackSend color: '#e83036', message: "*Failed Build Number:* 1234"
-
-        }
-
-    }
+   
 
 }
